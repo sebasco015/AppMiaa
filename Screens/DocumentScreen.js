@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from "react";
 import {StyleSheet, Text, TouchableOpacity, Image, TextInput, ScrollView, Dimensions, View} from "react-native";
-import {Form} from "native-base";
 import {useNavigation, useIsFocused} from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -30,7 +29,7 @@ export default function App() {
   return (
     <ScrollView style={style.scroll} vertical>
       <Image style={style.logo} source={require("../assets/logomia.png")}/>
-      <Form style={style.form}>
+      <View style={style.form}>
         <Text style={style.inputName}>Documento</Text>
         <TextInput
           style={style.input}
@@ -44,7 +43,7 @@ export default function App() {
         <TouchableOpacity onPress={handlePressTouch} style={style.btn}>
           <Text style={style.btnText}>Tomar fotografía</Text>
         </TouchableOpacity>
-      </Form>
+      </View>
     </ScrollView>
   );
 }

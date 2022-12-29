@@ -4,7 +4,6 @@ import {TextInput, TouchableOpacity, Text, StyleSheet, Dimensions, Image, View} 
 import {ScrollView} from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useNavigation, useIsFocused} from "@react-navigation/native";
-import {Form} from "native-base";
 
 import env from "../env.json";
 
@@ -26,9 +25,9 @@ function LoginScreen() {
         });
         
         if (resp.status === 200 && env.ALLOWED_ROLES.indexOf(resp.data.unUsuario.roles[0].nombre) >= 0) {
-          AsyncStorage.setItem("token", resp.data.tokeDeAcceso);
-          AsyncStorage.setItem("id", String(resp.data.unUsuario.id));
-          AsyncStorage.setItem("rol", resp.data.unUsuario.roles[0].nombre);
+          await AsyncStorage.setItem("token", resp.data.tokeDeAcceso);
+          await AsyncStorage.setItem("id", String(resp.data.unUsuario.id));
+          await AsyncStorage.setItem("rol", resp.data.unUsuario.roles[0].nombre);
           if (resp.data.unUsuario.roles[0].nombre === "ROLE_DOCENTE") navigation.navigate("camera", { document: "" });
           else navigation.navigate("document");
         } else setErr("Usuario no permitido");
@@ -42,7 +41,8 @@ function LoginScreen() {
   useEffect(() => {
     (async () => {
       if(isFocused) {
-        await AsyncStorage.clear();
+        const storqageKeys = await AsyncStorage.getAllKeys();
+        if (storqageKeys.length > 0) await AsyncStorage.clear();
         setErr("");
         setUsernameOrEmail("");
         setPassword("");
@@ -54,7 +54,7 @@ function LoginScreen() {
     <ScrollView contentContainerStyle={style.scroll} vertical>
       <Image style={style.logo} source={require("../assets/logomia.png")} />
       <Text style={style.greeting}>Bienvenido</Text>
-      <Form style={style.form}>
+      <View style={style.form}>
         <Text style={style.inputName}>Usuario</Text>
         <TextInput
           style={style.input}
@@ -76,7 +76,7 @@ function LoginScreen() {
         <TouchableOpacity style={style.btn} onPress={() => handleSubmit()}>
           <Text style={style.btnText}>Iniciar Sesión</Text>
         </TouchableOpacity>
-      </Form>
+      </View>
     </ScrollView>
   );
 }
